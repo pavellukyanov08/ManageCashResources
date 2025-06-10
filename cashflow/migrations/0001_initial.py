@@ -38,7 +38,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=50)),
-                ('type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='categories', to='main_page.type')),
+                ('type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='categories',
+                                           to='cashflow.type')),
             ],
         ),
         migrations.CreateModel(
@@ -49,10 +50,10 @@ class Migration(migrations.Migration):
                 ('comment', models.TextField(blank=True, null=True)),
                 ('date', models.DateField()),
                 ('created_at', models.DateField(auto_now_add=True)),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='main_page.category')),
-                ('status', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='main_page.status')),
-                ('subcategory', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='main_page.subcategory')),
-                ('type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='main_page.type')),
+                ('category', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='cashflow.category')),
+                ('status', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='cashflow.status')),
+                ('subcategory', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='cashflow.subcategory')),
+                ('type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='cashflow.type')),
             ],
         ),
     ]

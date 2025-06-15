@@ -21,4 +21,7 @@ urlpatterns = [
     path('records/create/', views.add_cashflow_record, name='record-create'),
     path('records/<int:pk>/update', views.edit_cashflow_record, name='record-update'),
     path('records/<int:pk>/delete', views.delete_cashflow_record, name='record-delete'),
+
+    path('ajax/load-categories/', views.load_categories, name='ajax_load_categories'),
+    path('ajax/load-subcategories/', views.load_subcategories, name='ajax_load_subcategories'),
 ]

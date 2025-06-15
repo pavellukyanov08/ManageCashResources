@@ -4,65 +4,56 @@
 
   <form method="post">
     {% csrf_token %}
-    {{ form.date.label_tag }} {{ form.date }}
-    {{ form.status.label_tag }} {{ form.status }}
-    {{ form.amount.label_tag }} {{ form.amount }}
-    {{ form.comment.label_tag }} {{ form.comment }}
+    {{ form.as_p }}
 
-        <div>
-      {{ form.type.label_tag }}
-      <select name="type" id="id_type" onchange="this.form.submit()">
-        {% for choice in form.type.field.choices %}
-          <option value="{{ choice.0 }}" {% if form.type.value == choice.0 %}selected{% endif %}>
-            {{ choice.1 }}
-          </option>
-        {% endfor %}
-      </select>
-    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#id_type').change(function() {
+                var typeId = $(this).val();
+                $('#id_category').html('<option value="">---------</option>');
+                $('#id_subcategory').html('<option value="">---------</option>');
 
-    <div>
-      {{ form.category.label_tag }}
-      <select name="category" id="id_category" {% if not form.category.field.queryset %}disabled{% endif %} onchange="this.form.submit()">
-        {% if form.category.field.queryset %}
-          {% for choice in form.category.field.choices %}
-            <option value="{{ choice.0 }}" {% if form.category.value == choice.0 %}selected{% endif %}>
-              {{ choice.1 }}
-            </option>
-          {% endfor %}
-        {% else %}
-          <option value="">-- Выберите тип сначала --</option>
-        {% endif %}
-      </select>
-    </div>
+                if (typeId) {
+                    $.ajax({
+                        url: "{% url 'ajax_load_categories' %}",
+                        data: {
+                            'type_id': typeId
+                        },
+                        success: function(data) {
+                            $.each(data, function(index, category) {
+                                $('#id_category').append($('<option>', {
+                                    value: category.id,
+                                    text: category.name
+                                }));
+                            });
+                        }
+                    });
+                }
+            });
 
-    <div>
-      {{ form.subcategory.label_tag }}
-      <select name="subcategory" id="id_subcategory" {% if not form.subcategory.field.queryset %}disabled{% endif %}>
-        {% if form.subcategory.field.queryset %}
-          {% for choice in form.subcategory.field.choices %}
-            <option value="{{ choice.0 }}" {% if form.subcategory.value == choice.0 %}selected{% endif %}>
-              {{ choice.1 }}
-            </option>
-          {% endfor %}
-        {% else %}
-          <option value="">-- Выберите категорию сначала --</option>
-        {% endif %}
-      </select>
-    </div>
+            $('#id_category').change(function() {
+                var categoryId = $(this).val();
+                $('#id_subcategory').html('<option value="">---------</option>');
 
-    <button type="submit">Сохранить</button>
-    <a href="{% url 'record-list' %}">Назад</a>
-  </form>
-{% endblock %}
-
-
-
-
-
-
-
-
-    <button type="submit">Сохранить</button>
-    <a href="{% url 'record-list' %}">Назад</a>
-  </form>
+                if (categoryId) {
+                    $.ajax({
+                        url: "{% url 'ajax_load_subcategories' %}",
+                        data: {
+                            'category_id': categoryId
+                        },
+                        success: function(data) {
+                            $.each(data, function(index, subcategory) {
+                                $('#id_subcategory').append($('<option>', {
+                                    value: subcategory.id,
+                                    text: subcategory.name
+                                }));
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</form>
 {% endblock %}

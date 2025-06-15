@@ -78,7 +78,7 @@
 
 /* Разделитель между кнопками */
 td .update-record:after {
-    content: "|";
+    content: "";
     color: #ddd;
     margin-left: 8px;
     position: relative;
@@ -110,7 +110,8 @@ tr:hover {
 /* Расположение справочников */
 .reference-tables {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-rows: repeat(2, auto);
+    grid-template-columns: repeat(2, auto);
     gap: 20px;
 }
 

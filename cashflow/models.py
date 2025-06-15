@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Status(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, verbose_name='Наименование')
 
     created_at = models.DateField(auto_now_add=True)
 
@@ -10,7 +10,7 @@ class Status(models.Model):
 
 
 class Type(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, verbose_name='Наименование')
 
     created_at = models.DateField(auto_now_add=True)
 
@@ -18,8 +18,8 @@ class Type(models.Model):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=50)
-    type = models.ForeignKey(Type, on_delete=models.CASCADE, related_name='categories')
+    name = models.CharField(max_length=50, verbose_name='Наименование')
+    type = models.ForeignKey(Type, on_delete=models.CASCADE, related_name='categories', verbose_name='Тип')
 
     created_at = models.DateField(auto_now_add=True)
 
@@ -27,8 +27,9 @@ class Category(models.Model):
 
 
 class SubCategory(models.Model):
-    name = models.CharField(max_length=50)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='subcategories')
+    name = models.CharField(max_length=50, verbose_name='Наименование')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='subcategories',
+                                 verbose_name='Категория')
 
     created_at = models.DateField(auto_now_add=True)
 

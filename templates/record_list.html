@@ -24,6 +24,33 @@
 
         <p><a class="create-record" href="{% url 'create-record' %}?entity=cashflow">Добавить запись</a></p>
 
+        {% if filter %}
+            <form method="get" class="filter-form">
+                <div>
+                    {{ filter.form.status.label_tag }}
+                    {{ filter.form.status }}
+                </div>
+                <div>
+                    {{ filter.form.type.label_tag }}
+                    {{ filter.form.type }}
+                </div>
+                <div>
+                    {{ filter.form.category.label_tag }}
+                    {{ filter.form.category }}
+                </div>
+                <div>
+                    {{ filter.form.subcategory.label_tag }}
+                    {{ filter.form.subcategory }}
+                </div>
+                <div>
+                    {{ filter.form.date_range.label_tag }}
+                    {{ filter.form.date_range }}
+                </div>
+                <button type="submit" class="btn btn-primary">Фильтровать</button>
+                <a href="?" class="btn btn-secondary">Сбросить</a>
+            </form>
+        {% endif %}
+
         <table class="records-table">
             <thead>
                 <tr>

@@ -9,6 +9,7 @@ from .forms import (
     CategoryForm,
     SubCategoryForm
 )
+from .filters import CashflowRecordFilter
 
 
 def get_records(request):
@@ -20,8 +21,12 @@ def get_records(request):
     categories = Category.objects.none()
     subcategories = SubCategory.objects.none()
 
+    record_filter =  None
+
     if request_type == 'cashflow':
         records = CashflowRecord.objects.all()
+        record_filter = CashflowRecordFilter(request.GET, queryset=records)
+        records = record_filter.qs
 
     if request_type == 'reference_books':
         statuses = Status.objects.all()
@@ -35,6 +40,7 @@ def get_records(request):
         'types': types,
         'categories': categories,
         'subcategories': subcategories,
+        'filter': record_filter if request_type == 'cashflow' else None,
     }
 
     return render(request, 'record_list.html', context)
@@ -69,7 +75,14 @@ def add_record(request):
     })
 
 
-def edit_record(request, idx):
+def filtration(request):
+    queryset = CashflowRecord.objects.all()
+    filter = CashflowRecordFilter(request.GET, queryset=queryset)
+
+    return render(request, 'record_list.html', )
+
+
+def edit_record(request, pk):
     entity_type = request.GET.get('entity', 'cashflow')
 
     _models = {
@@ -96,7 +109,7 @@ def edit_record(request, idx):
     if not form_class:
         raise Http404('Форма для сущности не найдена')
 
-    get_record = get_object_or_404(get_model, pk=idx)
+    get_record = get_object_or_404(get_model, pk=pk)
     form = None
 
     if request.method == "POST":
@@ -114,11 +127,25 @@ def edit_record(request, idx):
     })
 
 
-def delete_record(request, idx):
-    record = CashflowRecord.objects.get(id=idx)
+def delete_record(request, pk):
+    entity_type = request.GET.get('entity', 'cashflow')
+
+    _models = {
+        'types': Type,
+        'statuses': Status,
+        'categories': Category,
+        'subcategories': SubCategory,
+        'cashflow': CashflowRecord,
+    }
+
+    get_model = _models.get(entity_type)
+    if not get_model:
+        raise Http404('Неверный тип сущности')
+
+    get_record = get_object_or_404(get_model, pk=pk)
 
     if request.method == 'POST' and request.POST.get('_method') == 'DELETE':
-        record.delete()
+        get_record.delete()
         return redirect('record-list')
 
-    return render(request, 'delete.html', {'record': record})
+    return render(request, 'delete.html', {'record': get_record})

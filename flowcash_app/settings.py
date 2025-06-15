@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'cashflow',
     'api',
     'users.apps.UsersConfig',
+    'django_filters'
 ]
 
 MIDDLEWARE = [

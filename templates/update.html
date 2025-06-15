@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+    <h2 class="header">
+        {% if form.instance.pk %}
+            Редактирование
+        {% else %}
+            Добавление
+        {% endif %}
+
+        {% if form_type == 'cashflow' %}денежной записи
+        {% elif form_type == 'statuses' %}статуса
+        {% elif form_type == 'types' %}типа
+        {% elif form_type == 'categories' %}категории
+        {% elif form_type == 'subcategories' %}подкатегории
+        {% else %}записи
+        {% endif %}
+    </h2>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Сохранить</button>
+  </form>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    const typeSelect = document.getElementById('id_type');
+    const categorySelect = document.getElementById('id_category');
+    const subcategorySelect = document.getElementById('id_subcategory');
+
+    if (typeSelect) {
+        typeSelect.addEventListener('change', function() {
+            const typeId = this.value;
+            fetch(`/api/categories/?type=${typeId}`)
+                .then(response => response.json())
+                .then(data => {
+                    categorySelect.innerHTML = '<option value="">---------</option>';
+                    data.forEach(function(item) {
+                        categorySelect.innerHTML += `<option value="${item.id}">${item.name}</option>`;
+                    });
+                    subcategorySelect.innerHTML = '<option value="">---------</option>';
+                });
+        });
+
+        categorySelect.addEventListener('change', function() {
+            const categoryId = this.value;
+            fetch(`/api/subcategories/?category=${categoryId}`)
+                .then(response => response.json())
+                .then(data => {
+                    subcategorySelect.innerHTML = '<option value="">---------</option>';
+                    data.forEach(function(item) {
+                        subcategorySelect.innerHTML += `<option value="${item.id}">${item.name}</option>`;
+                    });
+                });
+        });
+    }
+</script>
+{% endblock %}

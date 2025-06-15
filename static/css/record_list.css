@@ -1,0 +1,122 @@
+/* Общие стили */
+* {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.view-switcher {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.view-switcher a {
+    padding: 8px 16px;
+    background: #f0f0f0;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #333;
+}
+
+.view-switcher a.active {
+    background: #4CAF50;
+    color: white;
+}
+
+/* Стили для кнопок действий */
+.create-record, .update-record, .delete-record {
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 0 2px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.create-record {
+    background-color: #2189e1;
+    color: white;
+}
+
+.update-record:hover {
+    background-color: #45a049;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.update-record {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.update-record:hover {
+    background-color: #45a049;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.delete-record {
+    background-color: #f44336;
+    color: white;
+}
+
+.delete-record:hover {
+    background-color: #d32f2f;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Убираем стандартный вид ссылки */
+.update-record:focus, .delete-record:focus {
+    outline: none;
+}
+
+/* Разделитель между кнопками */
+td .update-record:after {
+    content: "|";
+    color: #ddd;
+    margin-left: 8px;
+    position: relative;
+    right: -4px;
+}
+
+
+/* Стили для таблиц */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Расположение справочников */
+.reference-tables {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.reference-table {
+    background: white;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}

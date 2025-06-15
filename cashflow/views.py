@@ -1,69 +1,124 @@
-from django.http import JsonResponse
-from django.shortcuts import redirect, render
+from django.http import Http404
+from django.shortcuts import redirect, render, get_object_or_404
+
 from .models import *
-from .forms import CashflowRecordForm
+from .forms import (
+    CashflowRecordForm,
+    TypeForm,
+    StatusForm,
+    CategoryForm,
+    SubCategoryForm
+)
 
 
-def get_cashflow_records(request):
-    records = CashflowRecord.objects.all()
-    type =
+def get_records(request):
+    request_type = request.GET.get('entity', 'cashflow')
 
-    return render(request, 'record_list.html', {'records': records})
+    records = CashflowRecord.objects.none()
+    statuses = Status.objects.none()
+    types = Type.objects.none()
+    categories = Category.objects.none()
+    subcategories = SubCategory.objects.none()
+
+    if request_type == 'cashflow':
+        records = CashflowRecord.objects.all()
+
+    if request_type == 'reference_books':
+        statuses = Status.objects.all()
+        types = Type.objects.all()
+        categories = Category.objects.all()
+        subcategories = SubCategory.objects.all()
+
+    context = {
+        'records': records,
+        'statuses': statuses,
+        'types': types,
+        'categories': categories,
+        'subcategories': subcategories,
+    }
+
+    return render(request, 'record_list.html', context)
 
 
-def load_categories(request):
-    type_id = request.GET.get('type_id')
-    categories = Category.objects.filter(type_id=type_id).values('id', 'name')
-    return JsonResponse(list(categories), safe=False)
+def add_record(request):
+    form_type = request.GET.get('entity', 'cashflow')
 
-def load_subcategories(request):
-    category_id = request.GET.get('category_id')
-    subcategories = SubCategory.objects.filter(category_id=category_id).values('id', 'name')
-    return JsonResponse(list(subcategories), safe=False)
+    form_classes = {
+        'types': TypeForm,
+        'statuses': StatusForm,
+        'categories': CategoryForm,
+        'subcategories': SubCategoryForm,
+        'cashflow': CashflowRecordForm,
+    }
+    form = None
 
+    form_class = form_classes.get(form_type)
 
-def add_cashflow_record(request):
-    selected_type = request.POST.get('type')
-    selected_category = request.POST.get('category')
-
-    form_kwargs = {}
-    if selected_type:
-        form_kwargs['selected_type'] = selected_type
-    if selected_category:
-        form_kwargs['selected_category'] = selected_category
-
-    if request.method == 'POST':
-        form = CashflowRecordForm(request.POST, **form_kwargs)
-        if form.is_valid():
-            form.save()
-            return redirect('record-list')
+    if request.method == "POST":
+        if form_class:
+            form = form_class(request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect('record-list')
     else:
-        form = CashflowRecordForm()
+        form = form_class() if form_class else None
 
-    return render(request, 'record.html', {'form': form})
+    return render(request, 'update.html', {
+        'form': form,
+        'form_type': form_type
+    })
 
 
-def edit_cashflow_record(request, record_id):
-    record = CashflowRecord.objects.get(record_id=record_id)
-    if request.method == 'PUT':
-        form = CashflowRecordForm(request.POST, instance=record)
-        if form.is_valid():
-            form.save()
-            return redirect('record-list')
+def edit_record(request, idx):
+    entity_type = request.GET.get('entity', 'cashflow')
+
+    _models = {
+        'types': Type,
+        'statuses': Status,
+        'categories': Category,
+        'subcategories': SubCategory,
+        'cashflow': CashflowRecord,
+    }
+
+    form_classes = {
+        'types': TypeForm,
+        'statuses': StatusForm,
+        'categories': CategoryForm,
+        'subcategories': SubCategoryForm,
+        'cashflow': CashflowRecordForm,
+    }
+
+    get_model = _models.get(entity_type)
+    if not get_model:
+        raise Http404('Неверный тип сущности')
+
+    form_class = form_classes.get(entity_type)
+    if not form_class:
+        raise Http404('Форма для сущности не найдена')
+
+    get_record = get_object_or_404(get_model, pk=idx)
+    form = None
+
+    if request.method == "POST":
+        if form_class:
+            form = form_class(request.POST, instance=get_record)
+            if form.is_valid():
+                form.save()
+                return redirect('record-list')
     else:
-        form = CashflowRecordForm(instance=record)
+        form = form_class(instance=get_record)
 
-    return render(request, 'update.html', {'form': form})
+    return render(request, 'update.html', {
+        'form': form,
+        'form_type': entity_type
+    })
 
 
-def delete_cashflow_record(request, record_id):
-    record = CashflowRecord.objects.get(record_id=record_id)
-    if request.method == 'DELETE':
-        form = CashflowRecordForm(request.POST, instance=record)
-        if form.is_valid():
-            form.save()
-            return redirect('record-list')
-    else:
-        form = CashflowRecordForm(instance=record)
+def delete_record(request, idx):
+    record = CashflowRecord.objects.get(id=idx)
 
-    return render(request, 'update.html', {'form': form})
+    if request.method == 'POST' and request.POST.get('_method') == 'DELETE':
+        record.delete()
+        return redirect('record-list')
+
+    return render(request, 'delete.html', {'record': record})

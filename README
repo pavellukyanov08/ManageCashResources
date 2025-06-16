@@ -1,0 +1,37 @@
+# ManageCashResources
+
+Проект для управления движением денежных средств на Django.
+
+---
+
+## Запуск проекта через Docker на локальной машине
+
+sudo docker-compose build
+sudo docker-compose up -d
+или
+sudo docker-compose up --build -d
+
+### Шаг 1. Клонировать репозиторий и перейти в папку проекта
+```bash
+git clone https://github.com/pavellukyanov08/ManageCashResources.git
+cd ManageCashResources
+```
+
+### Шаг 2. Создать файл .env в корне проекта и необходимыми переменными окружения
+(пример содержимого .env)
+
+ENVIRONMENT=local
+
+LOCAL_DB_HOST=127.0.0.1
+LOCAL_DB_PORT=5439
+POSTGRES_DB=cashflow_db
+POSTGRES_USER=cashflow_user
+POSTGRES_PASS=cashflow_pass
+
+SECRET_KEY=sdfgabvxvsv
+DEBUG=1
+
+### Шаг 2. Запустить миграции
+```bash
+python manage.py migrate
+```

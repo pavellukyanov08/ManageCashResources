@@ -2,64 +2,105 @@
 {% load static %}
 
 {% block css %}
-    
+    <link rel="stylesheet" href="{% static 'css/update.css' %}">
 {% endblock %}
 
 {% block content %}
-    <h2 class="header">
-        {% if form.instance.pk %}
-            Редактирование
-        {% else %}
-            Добавление
-        {% endif %}
+<div class="form-container">
+  <h2 class="header">
+    {% if form.instance.pk %}
+      Редактирование
+    {% else %}
+      Добавление
+    {% endif %}
 
-        {% if form_type == 'cashflow' %}денежной записи
-        {% elif form_type == 'statuses' %}статуса
-        {% elif form_type == 'types' %}типа
-        {% elif form_type == 'categories' %}категории
-        {% elif form_type == 'subcategories' %}подкатегории
-        {% else %}записи
-        {% endif %}
-    </h2>
+    {% if form_type == 'cashflow' %}денежной записи
+    {% elif form_type == 'statuses' %}статуса
+    {% elif form_type == 'types' %}типа
+    {% elif form_type == 'categories' %}категории
+    {% elif form_type == 'subcategories' %}подкатегории
+    {% else %}записи
+    {% endif %}
+  </h2>
 
   <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Сохранить</button>
+
+    {% for field in form %}
+      <div class="form-group">
+        {{ field.label_tag }}
+        {{ field }}
+        {% if field.errors %}
+          {{ field.errors }}
+        {% endif %}
+        {% if field.help_text %}
+          <small class="help-text">{{ field.help_text }}</small>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <button type="submit" class="btn-submit">Сохранить</button>
   </form>
+</div>
 {% endblock %}
 
 {% block extra_scripts %}
 <script>
+  document.addEventListener('DOMContentLoaded', function() {
     const typeSelect = document.getElementById('id_type');
     const categorySelect = document.getElementById('id_category');
     const subcategorySelect = document.getElementById('id_subcategory');
 
     if (typeSelect) {
-        typeSelect.addEventListener('change', function() {
-            const typeId = this.value;
-            fetch(`/api/categories/?type=${typeId}`)
-                .then(response => response.json())
-                .then(data => {
-                    categorySelect.innerHTML = '<option value="">---------</option>';
-                    data.forEach(function(item) {
-                        categorySelect.innerHTML += `<option value="${item.id}">${item.name}</option>`;
-                    });
-                    subcategorySelect.innerHTML = '<option value="">---------</option>';
-                });
-        });
+      // Добавляем классы к динамически создаваемым элементам
+      typeSelect.classList.add('form-control');
+      if (categorySelect) categorySelect.classList.add('form-control');
+      if (subcategorySelect) subcategorySelect.classList.add('form-control');
 
+      typeSelect.addEventListener('change', function() {
+        const typeId = this.value;
+        if (typeId) {
+          fetch(`/api/categories/?type=${typeId}`)
+            .then(response => response.json())
+            .then(data => {
+              categorySelect.innerHTML = '<option value="">---------</option>';
+              data.forEach(function(item) {
+                const option = document.createElement('option');
+                option.value = item.id;
+                option.textContent = item.name;
+                categorySelect.appendChild(option);
+              });
+              subcategorySelect.innerHTML = '<option value="">---------</option>';
+            });
+        }
+      });
+
+      if (categorySelect) {
         categorySelect.addEventListener('change', function() {
-            const categoryId = this.value;
+          const categoryId = this.value;
+          if (categoryId) {
             fetch(`/api/subcategories/?category=${categoryId}`)
-                .then(response => response.json())
-                .then(data => {
-                    subcategorySelect.innerHTML = '<option value="">---------</option>';
-                    data.forEach(function(item) {
-                        subcategorySelect.innerHTML += `<option value="${item.id}">${item.name}</option>`;
-                    });
+              .then(response => response.json())
+              .then(data => {
+                subcategorySelect.innerHTML = '<option value="">---------</option>';
+                data.forEach(function(item) {
+                  const option = document.createElement('option');
+                  option.value = item.id;
+                  option.textContent = item.name;
+                  subcategorySelect.appendChild(option);
                 });
+              });
+          }
         });
+      }
     }
+
+    // Добавляем классы ко всем полям формы
+    document.querySelectorAll('input, select, textarea').forEach(el => {
+      if (!el.classList.contains('form-control')) {
+        el.classList.add('form-control');
+      }
+    });
+  });
 </script>
 {% endblock %}

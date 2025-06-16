@@ -5,11 +5,11 @@ services:
       dockerfile: Dockerfile
     container_name: cashflow_app
     expose:
-      - "5000"
+      - "8000"
     ports:
-      - "5000:5000"
+      - "8000:8000"
     env_file:
-      - .env
+      - .env.docker
     volumes:
       - ./staticfiles:/cashflowmanage/staticfiles
       - ./media:/cashflowmanage/media
@@ -24,7 +24,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     env_file:
-      - .env
+      - .env.docker
     ports:
       - "5435:5432"
     networks:

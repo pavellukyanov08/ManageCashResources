@@ -2,7 +2,7 @@ FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
-ENV DJANGO_SETTINGS_MODULE=flowcash_app.settings
+ENV DJANGO_SETTINGS_MODULE=cashflow_app.settings
 ENV PATH="/venv/bin:$PATH"
 
 WORKDIR /cashflowmanage

@@ -83,11 +83,11 @@ WSGI_APPLICATION = 'flowcash_app.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'cashflow_db',
-        'USER': 'cashflow_user',
-        'PASSWORD': 'cashflow_pass',
-        'HOST': 'localhost',
-        'PORT': '5439',
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASS'),
+        'HOST': 'db',
+        'PORT': '5432',
     }
 }
 
@@ -129,6 +129,10 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 

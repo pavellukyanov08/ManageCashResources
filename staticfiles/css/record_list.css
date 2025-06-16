@@ -1,0 +1,244 @@
+/* Общие стили */
+* {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.view-switcher {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.view-switcher a {
+    padding: 8px 16px;
+    background: #f0f0f0;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #333;
+}
+
+.view-switcher a.active {
+    background: #4CAF50;
+    color: white;
+}
+
+
+  /* Основные стили формы */
+  .filter-form {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 25px;
+  }
+
+  .filter-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: flex-end;
+  }
+
+  .filter-group {
+    flex: 1 1 200px;
+    min-width: 180px;
+  }
+
+  .filter-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #495057;
+    font-size: 14px;
+  }
+
+  /* Стили для выпадающих списков */
+  .select-wrapper {
+    position: relative;
+  }
+
+  .select-wrapper select {
+    width: 100%;
+    padding: 8px 30px 8px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background-color: white;
+    appearance: none;
+    font-size: 14px;
+    color: #495057;
+    height: 38px;
+  }
+
+  .select-arrow {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #6c757d;
+    font-size: 12px;
+  }
+
+  /* Стили для диапазона дат */
+  .date-range-group {
+    flex: 2 1 300px;
+  }
+
+  .date-range-inputs {
+    display: flex;
+    gap: 10px;
+  }
+
+  .date-range-inputs input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 14px;
+    height: 25px;
+  }
+
+  /* Стили для кнопок */
+  .filter-buttons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-left: auto;
+  }
+
+  .btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+  }
+
+  .btn-filter {
+    background-color: #007bff;
+    color: white;
+  }
+
+  .btn-filter:hover {
+    background-color: #0069d9;
+  }
+
+  .btn-reset {
+    background-color: #6c757d;
+    color: white;
+  }
+
+  .btn-reset:hover {
+    background-color: #5a6268;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+
+/* Стили для кнопок действий */
+.create-record, .update-record, .delete-record {
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 0 2px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.create-record {
+    background-color: #2189e1;
+    color: white;
+}
+
+.update-record:hover {
+    background-color: #45a049;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.update-record {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.update-record:hover {
+    background-color: #45a049;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.delete-record {
+    background-color: #f44336;
+    color: white;
+}
+
+.delete-record:hover {
+    background-color: #d32f2f;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Убираем стандартный вид ссылки */
+.update-record:focus, .delete-record:focus {
+    outline: none;
+}
+
+/* Разделитель между кнопками */
+td .update-record:after {
+    content: "";
+    color: #ddd;
+    margin-left: 8px;
+    position: relative;
+    right: -4px;
+}
+
+
+/* Стили для таблиц */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Расположение справочников */
+.reference-tables {
+    display: grid;
+    grid-template-rows: repeat(2, auto);
+    gap: 20px;
+}
+
+.reference-table {
+    background: white;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}

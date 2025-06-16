@@ -29,6 +29,8 @@
               <p><strong>Подкатегория:</strong> {{ record.subcategory.name }}</p>
             {% elif entity == 'types' %}
               <p><strong>Тип:</strong> {{ record.name }}</p>
+            {% elif entity == 'statuses' %}
+              <p><strong>Статус:</strong> {{ record.name }}</p>
             {% elif entity == 'categories' %}
               <p><strong>Категория:</strong> {{ record.name }}</p>
               <p><strong>Тип:</strong> {{ record.type.name }}</p>

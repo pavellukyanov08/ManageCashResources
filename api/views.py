@@ -1,4 +1,6 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
+from rest_framework.permissions import IsAuthenticated
+
 from .serializers import (
     CashflowSerializer,
     CategorySerializer,
@@ -14,18 +16,21 @@ from cashflow.models import (
     CashflowRecord
 )
 
-class StatusViewSet(viewsets.ReadOnlyModelViewSet):
+class StatusViewSet(viewsets.ModelViewSet):
     queryset = Status.objects.all()
     serializer_class = StatusSerializer
+    permission_classes = [IsAuthenticated]
 
 
-class TypeViewSet(viewsets.ReadOnlyModelViewSet):
+class TypeViewSet(viewsets.ModelViewSet):
     queryset = Type.objects.all()
     serializer_class = TypeSerializer
+    permission_classes = [IsAuthenticated]
 
 
-class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
+class CategoryViewSet(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         type_id = self.request.query_params.get('type')
@@ -33,8 +38,9 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
             return Category.objects.filter(type_id=type_id)
         return Category.objects.all()
 
-class SubCategoryViewSet(viewsets.ReadOnlyModelViewSet):
+class SubCategoryViewSet(viewsets.ModelViewSet):
     serializer_class = SubCategorySerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         category_id = self.request.query_params.get('category')
@@ -43,8 +49,9 @@ class SubCategoryViewSet(viewsets.ReadOnlyModelViewSet):
         return SubCategory.objects.all()
 
 
-class CashflowViewSet(viewsets.ReadOnlyModelViewSet):
+class CashflowViewSet(viewsets.ModelViewSet):
     queryset = CashflowRecord.objects.all().order_by('-date')
     serializer_class = CashflowSerializer
+    permission_classes = [IsAuthenticated]
     # filters_backends = [DjangoFilterBackend]
     # filterset_fields = ['status', 'type', 'sub_category', 'category', 'custom_date']

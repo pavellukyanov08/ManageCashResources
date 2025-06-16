@@ -1,16 +1,16 @@
 import django_filters
 from .models import CashflowRecord, Status, Type, Category, SubCategory
-from django import forms
+
 
 class CashflowRecordFilter(django_filters.FilterSet):
     status = django_filters.ModelChoiceFilter(
-        choices=Status.objects.all(),
+        queryset=Status.objects.all(),
         label="Статус",
         empty_label="Все статусы",
     )
 
-    type = django_filters.ChoiceFilter(
-        choices=Type.objects.all(),
+    type = django_filters.ModelChoiceFilter(
+        queryset=Type.objects.all(),
         label="Тип заказа",
         empty_label="Все типы",
     )
@@ -33,8 +33,7 @@ class CashflowRecordFilter(django_filters.FilterSet):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.data.get('category'):
-            # Обновляем queryset подкатегорий при наличии выбранной категории
+        if 'category' in self.data and self.data.get('category'):
             self.filters['subcategory'].queryset = SubCategory.objects.filter(
                 category_id=self.data['category']
             )

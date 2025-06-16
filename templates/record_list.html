@@ -25,30 +25,65 @@
         <p><a class="create-record" href="{% url 'create-record' %}?entity=cashflow">Добавить запись</a></p>
 
         {% if filter %}
-            <form method="get" class="filter-form">
-                <div>
-                    {{ filter.form.status.label_tag }}
+          <form method="get" class="filter-form" id="auto-filter-form">
+            <div class="filter-container">
+              <!-- Строка с фильтрами -->
+              <div class="filter-row">
+                <!-- Фильтр по статусу -->
+                <div class="filter-group">
+                  {{ filter.form.status.label_tag }}
+                  <div class="select-wrapper">
                     {{ filter.form.status }}
+                    <span class="select-arrow">▼</span>
+                  </div>
                 </div>
-                <div>
-                    {{ filter.form.type.label_tag }}
+
+                <!-- Фильтр по типу -->
+                <div class="filter-group">
+                  {{ filter.form.type.label_tag }}
+                  <div class="select-wrapper">
                     {{ filter.form.type }}
+                    <span class="select-arrow">▼</span>
+                  </div>
                 </div>
-                <div>
-                    {{ filter.form.category.label_tag }}
+
+                <!-- Фильтр по категории -->
+                <div class="filter-group">
+                  {{ filter.form.category.label_tag }}
+                  <div class="select-wrapper">
                     {{ filter.form.category }}
+                    <span class="select-arrow">▼</span>
+                  </div>
                 </div>
-                <div>
-                    {{ filter.form.subcategory.label_tag }}
+
+                <!-- Фильтр по подкатегории -->
+                <div class="filter-group">
+                  {{ filter.form.subcategory.label_tag }}
+                  <div class="select-wrapper">
                     {{ filter.form.subcategory }}
+                    <span class="select-arrow">▼</span>
+                  </div>
                 </div>
-                <div>
-                    {{ filter.form.date_range.label_tag }}
+              </div>
+
+              <!-- Строка с датами и кнопками -->
+              <div class="filter-row">
+                <!-- Фильтр по дате -->
+                <div class="filter-group date-range-group">
+                  {{ filter.form.date_range.label_tag }}
+                  <div class="date-range-inputs">
                     {{ filter.form.date_range }}
+                  </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Фильтровать</button>
-                <a href="?" class="btn btn-secondary">Сбросить</a>
-            </form>
+
+                <!-- Кнопки -->
+                <div class="filter-buttons">
+                  <button type="submit" class="btn btn-filter">Фильтровать</button>
+                  <a href="?" class="btn btn-reset">Сбросить</a>
+                </div>
+              </div>
+            </div>
+          </form>
         {% endif %}
 
         <table class="records-table">

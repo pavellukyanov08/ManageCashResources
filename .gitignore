@@ -3,6 +3,6 @@ venv
 **/__pycache__/
 */__pycache__/
 __pycache__
-**/migrations/
 staticfiles
-*/migrations/
+*/migrations/*
+!*/migrations/__init__.py

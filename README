@@ -53,7 +53,12 @@ python manage.py migrate
 python manage.py createsuperuser
 ```
 
-Шаг 4. Запустить сервер
+### Шаг 4. Собрать статику (опционально)
+```bash
+python manage.py collectstatic
+```
+
+### Шаг 4. Запустить сервер
 ```bash
 python manage.py runserver
 ```

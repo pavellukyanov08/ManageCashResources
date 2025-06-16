@@ -62,15 +62,20 @@ class CategoryForm(forms.ModelForm):
         self.fields['type'].queryset = Type.objects.all()
 
     def clean(self):
-        name = self.clean().get('name')
-        type_obj = self.clean().get('type')
+        cleaned_data = super().clean()
+        name = cleaned_data.get('name')
+        type_obj = cleaned_data.get('type')
 
-        if name and type_obj and Category.objects.filter(
-                name=name, type=type_obj
-        ).exclude(pk=self.instance.pk).exists():
-            raise forms.ValidationError(
-                "Категория с таким именем уже существует для этого типа"
-            )
+        if name and type_obj:
+            if Category.objects.filter(
+                    name=name,
+                    type=type_obj
+            ).exclude(pk=self.instance.pk).exists():
+                raise forms.ValidationError(
+                    "Тип с таким именем уже существует в этой категории"
+                )
+
+        return cleaned_data
 
 
 class SubCategoryForm(forms.ModelForm):
@@ -83,14 +88,17 @@ class SubCategoryForm(forms.ModelForm):
         self.fields['category'].queryset = Category.objects.all()
 
     def clean(self):
-        name = self.clean().get('name')
-        type_obj = self.clean().get('category')
+        cleaned_data = super().clean()
+        name = cleaned_data.get('name')
+        category = cleaned_data.get('category')
 
-        if name and type_obj and Category.objects.filter(
-                name=name, type=type_obj
-        ).exclude(pk=self.instance.pk).exists():
-            raise forms.ValidationError(
-                "Категория с таким именем уже существует для этого типа"
-            )
+        if name and category:
+            if SubCategory.objects.filter(
+                    name=name,
+                    category=category
+            ).exclude(pk=self.instance.pk).exists():
+                raise forms.ValidationError(
+                    "Подкатегория с таким именем уже существует в этой категории"
+                )
 
-
+        return cleaned_data

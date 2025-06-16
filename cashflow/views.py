@@ -75,17 +75,10 @@ def add_record(request):
     })
 
 
-def filtration(request):
-    queryset = CashflowRecord.objects.all()
-    filter = CashflowRecordFilter(request.GET, queryset=queryset)
-
-    return render(request, 'record_list.html', )
-
-
 def edit_record(request, pk):
     entity_type = request.GET.get('entity', 'cashflow')
 
-    _models = {
+    model_map = {
         'types': Type,
         'statuses': Status,
         'categories': Category,
@@ -101,25 +94,25 @@ def edit_record(request, pk):
         'cashflow': CashflowRecordForm,
     }
 
-    get_model = _models.get(entity_type)
-    if not get_model:
+    model = model_map.get(entity_type)
+    if not model:
         raise Http404('Неверный тип сущности')
 
     form_class = form_classes.get(entity_type)
     if not form_class:
         raise Http404('Форма для сущности не найдена')
 
-    get_record = get_object_or_404(get_model, pk=pk)
+    record = get_object_or_404(model, pk=pk)
     form = None
 
     if request.method == "POST":
         if form_class:
-            form = form_class(request.POST, instance=get_record)
+            form = form_class(request.POST, instance=record)
             if form.is_valid():
                 form.save()
                 return redirect('record-list')
     else:
-        form = form_class(instance=get_record)
+        form = form_class(instance=record)
 
     return render(request, 'update.html', {
         'form': form,
@@ -128,7 +121,7 @@ def edit_record(request, pk):
 
 
 def delete_record(request, pk):
-    entity_type = request.GET.get('entity', 'cashflow')
+    entity_type = request.GET.get('entity')
 
     _models = {
         'types': Type,
@@ -138,14 +131,14 @@ def delete_record(request, pk):
         'cashflow': CashflowRecord,
     }
 
-    get_model = _models.get(entity_type)
-    if not get_model:
+    model = _models.get(entity_type)
+    if not model:
         raise Http404('Неверный тип сущности')
 
-    get_record = get_object_or_404(get_model, pk=pk)
+    record = get_object_or_404(model, pk=pk)
 
     if request.method == 'POST' and request.POST.get('_method') == 'DELETE':
-        get_record.delete()
+        record.delete()
         return redirect('record-list')
 
-    return render(request, 'delete.html', {'record': get_record})
+    return render(request, 'delete.html', {'record': record, 'entity': entity_type})

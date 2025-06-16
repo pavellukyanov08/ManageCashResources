@@ -1,12 +1,61 @@
 {% extends "base.html" %}
-{% block content %}
-  <h1>Удаление записи</h1>
-  <p>Вы уверены, что хотите удалить запись от {{ record.date }} на сумму {{ record.amount }}?</p>
+{% load static %}
 
-  <form method="POST">
-    {% csrf_token %}
-    <input type="hidden" name="_method" value="DELETE">
-    <button type="submit">Удалить</button>
-    <a href="{% url 'record-list' %}">Отмена</a>
-  </form>
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/delete.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="delete-container">
+      <div class="delete-card">
+        <h1 class="delete-title">
+          <i class="fas fa-exclamation-triangle warning-icon"></i>
+          Подтверждение удаления
+        </h1>
+
+        <div class="delete-content">
+          <p class="delete-message">
+            Вы собираетесь удалить {% if entity == 'cashflow' %} запись {% else %} объект {% endif %}
+{#          Вы уверены, что хотите удалить запись от {{ record.date }} на сумму {{ record.amount }}?#}
+          </p>
+
+          <div class="delete-details">
+            {% if entity == 'cashflow' %}
+              <p><strong>Дата:</strong> {{ record.date|date:"d.m.Y" }}</p>
+              <p><strong>Сумма:</strong> {{ record.amount }} ₽</p>
+              <p><strong>Стаус:</strong> {{ record.status.name }}</p>
+              <p><strong>Тип:</strong> {{ record.type.name }}</p>
+              <p><strong>Категория:</strong> {{ record.category.name }}</p>
+              <p><strong>Подкатегория:</strong> {{ record.subcategory.name }}</p>
+            {% elif entity == 'types' %}
+              <p><strong>Тип:</strong> {{ record.name }}</p>
+            {% elif entity == 'categories' %}
+              <p><strong>Категория:</strong> {{ record.name }}</p>
+              <p><strong>Тип:</strong> {{ record.type.name }}</p>
+            {% elif entity == 'subcategories' %}
+              <p><strong>Подкатегория:</strong> {{ record.name }}</p>
+              <p><strong>Категория:</strong> {{ record.category.name }}</p>
+            {% endif %}
+          </div>
+
+          <p class="delete-warning">
+            <i class="fas fa-exclamation-circle"></i>
+            Это действие нельзя отменить!
+          </p>
+        </div>
+
+        <form method="POST" class="delete-form">
+          {% csrf_token %}
+          <div class="form-actions">
+            <input type="hidden" name="_method" value="DELETE">
+            <button type="submit" class="btn btn-danger">
+              <i class="fas fa-trash-alt"></i> Удалить
+            </button>
+            <a href="{% if entity == 'records' %}{% url 'record-list' %}{% else %}{% url 'record-list' %}{% endif %}" class="btn btn-secondary">
+              <i class="fas fa-times"></i> Отмена
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
 {% endblock %}
